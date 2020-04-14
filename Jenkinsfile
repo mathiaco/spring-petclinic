@@ -20,14 +20,14 @@ pipeline {
                         if (BUILD_QUEUE_COUNT != '8') {
                             echo 'increment counter currently at '
                             newcount = (BUILD_QUEUE_COUNT as Integer) + 1
-                            bat '${newcount}' >> 'BUILD_QUEUE_COUNT'
+                            bat 'echo ${newcount} >> BUILD_QUEUE_COUNT'
                         }
                     }
                     else {
                         echo 'cleaning and testing'
                         bat './mvnw clean'
                         bat './mvnw test'
-                        bat 0 >> 'BUILD_QUEUE_COUNT'
+                        bat 'echo 0 >> BUILD_QUEUE_COUNT'
                     }
                 }
             }
