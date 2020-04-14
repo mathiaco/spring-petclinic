@@ -12,22 +12,22 @@ pipeline {
             }
             steps {
                 script {
-                    env.LAST_SUCCESS_HASH = readFile 'https://github.com/mathiaco/spring-petclinic/blob/master/HASH_FILE'
-                    env.BUILD_QUEUE_COUNT = readFile 'https://github.com/mathiaco/spring-petclinic/blob/master/BUILD_QUEUE_COUNT'
+                    env.LAST_SUCCESS_HASH = readFile 'HASH_FILE'
+                    env.BUILD_QUEUE_COUNT = readFile 'BUILD_QUEUE_COUNT'
                     echo 'last hash '
                     echo LAST_SUCCESS_HASH
                     if (LAST_SUCCESS_HASH != '0') {
                         if (BUILD_QUEUE_COUNT != 8) {
                             echo 'increment counter currently at '
                             echo BUILD_QUEUE_COUNT
-                            echo BUILD_QUEUE_COUNT + 1 > 'https://github.com/mathiaco/spring-petclinic/blob/master/BUILD_QUEUE_COUNT'
+                            echo BUILD_QUEUE_COUNT + 1 > 'BUILD_QUEUE_COUNT'
                         }
                     }
                     else {
                         echo 'cleaning and testing'
                         bat './mvnw clean'
                         bat './mvnw test'
-                        echo 0 > 'https://github.com/mathiaco/spring-petclinic/blob/master/BUILD_QUEUE_COUNT'
+                        echo 0 > 'BUILD_QUEUE_COUNT'
                     }
                 }
             }
