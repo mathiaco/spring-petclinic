@@ -16,7 +16,7 @@ pipeline {
                     env.BUILD_QUEUE_COUNT = readFile 'BUILD_QUEUE_COUNT'
                     echo 'last hash '
                     echo LAST_SUCCESS_HASH
-                    if (LAST_SUCCESS_HASH.contains('0')) {
+                    if (LAST_SUCCESS_HASH.contains('NONE')) {
                         echo 'cleaning and testing'
                         bat './mvnw clean'
                         bat './mvnw test'
@@ -60,7 +60,7 @@ pipeline {
                         writeFile file: 'HASH_FILE', text: env.GIT_COMMIT
                     }
                     else {
-                        if (LAST_SUCCESS_HASH.contains('0')) {
+                        if (LAST_SUCCESS_HASH.contains('NONE')) {
                             echo 'git bisect'
                             RUN_BISECT = 'TRUE'
                         }
