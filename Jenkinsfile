@@ -16,18 +16,18 @@ pipeline {
                     env.BUILD_QUEUE_COUNT = readFile 'BUILD_QUEUE_COUNT'
                     echo 'last hash '
                     echo LAST_SUCCESS_HASH
-                    if (LAST_SUCCESS_HASH != '0') {
+                    if (LAST_SUCCESS_HASH != 0) {
                         if (BUILD_QUEUE_COUNT != 8) {
                             echo 'increment counter currently at '
-                            echo BUILD_QUEUE_COUNT
-                            echo BUILD_QUEUE_COUNT + 1 > 'BUILD_QUEUE_COUNT'
+                            def newCount = BUILD_QUEUE_COUNT + 1
+                            bat newCount >> 'BUILD_QUEUE_COUNT'
                         }
                     }
                     else {
                         echo 'cleaning and testing'
                         bat './mvnw clean'
                         bat './mvnw test'
-                        echo 0 > 'BUILD_QUEUE_COUNT'
+                        bat 0 >> 'BUILD_QUEUE_COUNT'
                     }
                 }
             }
@@ -59,7 +59,7 @@ pipeline {
                         bat './mvnw package'
                     }
                     else {
-                        if (LAST_SUCCESS_HASH != '0') {
+                        if (LAST_SUCCESS_HASH != 0) {
                             echo 'git bisect'
                             RUN_BISECT = 'TRUE'
                         }
