@@ -27,7 +27,8 @@ pipeline {
                             echo 'increment counter currently at '
                             newcount = (BUILD_QUEUE_COUNT as Integer) + 1
                             echo newcount.toString()
-                            writeFile file: 'BUILD_QUEUE_COUNT', text: newcount.toString()                        }
+                            writeFile file: 'BUILD_QUEUE_COUNT', text: newcount.toString()
+                        }
                     }
                 }
             }
@@ -55,7 +56,7 @@ pipeline {
                 script {
                     if (LOCAL_BUILD_STATUS == 'PASSED') {
                         echo 'will build package'
-                        writeFile file: 'HASH_FILE', text: GIT_COMMIT                        }
+                        writeFile file: 'HASH_FILE', text: env.GIT_COMMIT                       }
                         bat './mvnw package'
                     }
                     else {
