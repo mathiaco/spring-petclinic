@@ -16,11 +16,10 @@ pipeline {
                     env.BUILD_QUEUE_COUNT = readFile 'BUILD_QUEUE_COUNT'
                     echo 'last hash '
                     echo LAST_SUCCESS_HASH
-                    if (LAST_SUCCESS_HASH != '0') {
+                    if (LAST_SUCCESS_HASH != 0) {
                         if (BUILD_QUEUE_COUNT != '8') {
                             echo 'increment counter currently at '
-                            BUILD_QUEUE_COUNT = (BUILD_QUEUE_COUNT as Integer) + 1
-                            bat BUILD_QUEUE_COUNT >> 'BUILD_QUEUE_COUNT'
+                            bat (BUILD_QUEUE_COUNT as Integer) + 1 >> 'BUILD_QUEUE_COUNT'
                         }
                     }
                     else {
