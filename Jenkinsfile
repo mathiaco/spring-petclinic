@@ -55,7 +55,7 @@ pipeline {
                 script {
                     if (LOCAL_BUILD_STATUS == 'PASSED') {
                         echo 'will build package'
-                        env.LAST_SUCCESS_HASH = env.GIT_COMMIT
+                        writeFile file: 'HASH_FILE', text: GIT_COMMIT                        }
                         bat './mvnw package'
                     }
                     else {
