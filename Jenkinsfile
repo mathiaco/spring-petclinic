@@ -14,8 +14,8 @@ pipeline {
                 script {
                     echo 'last hash '
                     echo env.LAST_SUCCESS_HASH
-                    if (env.LAST_SUCCESS_HASH !== 0) {
-                        if (env.BUILD_QUEUE_COUNT !== 8) {
+                    if (env.LAST_SUCCESS_HASH != 0) {
+                        if (env.BUILD_QUEUE_COUNT != 8) {
                             echo 'increment counter currently at '
                             echo env.BUILD_QUEUE_COUNT
                             env.BUILD_QUEUE_COUNT = env.BUILD_QUEUE_COUNT + 1
@@ -57,7 +57,7 @@ pipeline {
                         bat './mvnw package'
                     }
                     else {
-                        if (env.LAST_SUCCESS_HASH !== 0) {
+                        if (env.LAST_SUCCESS_HASH != 0) {
                             echo 'git bisect'
                             RUN_BISECT = 'TRUE'
                         }
