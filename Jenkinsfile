@@ -3,8 +3,8 @@ pipeline {
     environment {
         LOCAL_BUILD_STATUS = 'FAILED'
         RUN_BISECT = 'FALSE'
-        LAST_SUCCESS_HASH = readFile 'HASH_FILE.txt'
-        BUILD_QUEUE_COUNT = readFile 'BUILD_QUEUE_COUNT.txt'
+        LAST_SUCCESS_HASH = readFile 'https://github.com/mathiaco/spring-petclinic/blob/master/HASH_FILE'
+        BUILD_QUEUE_COUNT = readFile 'https://github.com/mathiaco/spring-petclinic/blob/master/BUILD_QUEUE_COUNT'
     }
     stages {
         stage('master build and test') {
@@ -20,14 +20,14 @@ pipeline {
                         if (BUILD_QUEUE_COUNT != 8) {
                             echo 'increment counter currently at '
                             echo BUILD_QUEUE_COUNT
-                            echo BUILD_QUEUE_COUNT + 1 > 'BUILD_QUEUE_COUNT.txt'
+                            echo BUILD_QUEUE_COUNT + 1 > 'https://github.com/mathiaco/spring-petclinic/blob/master/BUILD_QUEUE_COUNT'
                         }
-                        else {
-                            echo 'cleaning and testing'
-                            bat './mvnw clean'
-                            bat './mvnw test'
-                            echo 0 > 'BUILD_QUEUE_COUNT.txt'
-                        }
+                    }
+                    else {
+                        echo 'cleaning and testing'
+                        bat './mvnw clean'
+                        bat './mvnw test'
+                        echo 0 > 'https://github.com/mathiaco/spring-petclinic/blob/master/BUILD_QUEUE_COUNT'
                     }
                 }
             }
