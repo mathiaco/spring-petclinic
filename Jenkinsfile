@@ -21,10 +21,8 @@ pipeline {
             {
                 expression{ env.BRANCH_NAME == 'master' }
             }
-            {
-                steps {
-                    bat './mvnw deploy' 
-                }
+            steps {
+                bat './mvnw deploy' 
             }
         }
     }
