@@ -12,12 +12,12 @@ pipeline {
             }
             steps {
                 script {
-                    env.LAST_SUCCESS_HASH = readFile 'HASH_FILE'
-                    env.BUILD_QUEUE_COUNT = readFile 'BUILD_QUEUE_COUNT'
+                    env.LAST_SUCCESS_HASH = readFile 'HASH_FILE' as Integer
+                    env.BUILD_QUEUE_COUNT = readFile 'BUILD_QUEUE_COUNT' as Integer
                     echo 'last hash '
                     echo LAST_SUCCESS_HASH
-                    if (LAST_SUCCESS_HASH != 0) {
-                        if (BUILD_QUEUE_COUNT != 8) {
+                    if (LAST_SUCCESS_HASH != '0') {
+                        if (BUILD_QUEUE_COUNT != '8') {
                             echo 'increment counter currently at '
                             BUILD_QUEUE_COUNT = BUILD_QUEUE_COUNT + 1
                             bat BUILD_QUEUE_COUNT >> 'BUILD_QUEUE_COUNT'
