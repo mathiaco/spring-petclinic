@@ -16,7 +16,7 @@ pipeline {
                     env.BUILD_QUEUE_COUNT = readFile 'BUILD_QUEUE_COUNT'
                     echo 'last hash '
                     echo LAST_SUCCESS_HASH
-                    if (LAST_SUCCESS_HASH == '0') {
+                    if (LAST_SUCCESS_HASH == 0) {
                         echo 'cleaning and testing'
                         bat './mvnw clean'
                         bat './mvnw test'
@@ -26,6 +26,7 @@ pipeline {
                         if (BUILD_QUEUE_COUNT != '8') {
                             echo 'increment counter currently at '
                             newcount = (BUILD_QUEUE_COUNT as Integer) + 1
+                            echo newcount
                             writeFile file: 'BUILD_QUEUE_COUNT', text: newcount.toString()                        }
                     }
                 }
