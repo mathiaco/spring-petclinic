@@ -16,7 +16,7 @@ pipeline {
                 bat './mvnw package' 
             }
         }
-        stage('Build') {
+        stage('deploy') {
             if (env.BRANCH_NAME == 'master') {
                 steps {
                     bat './mvnw deploy' 
