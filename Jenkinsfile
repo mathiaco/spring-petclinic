@@ -19,8 +19,8 @@ pipeline {
                     if (LAST_SUCCESS_HASH != 0) {
                         if (BUILD_QUEUE_COUNT != 8) {
                             echo 'increment counter currently at '
-                            def newCount = BUILD_QUEUE_COUNT + 1
-                            bat newCount >> 'BUILD_QUEUE_COUNT'
+                            BUILD_QUEUE_COUNT = BUILD_QUEUE_COUNT + 1
+                            bat BUILD_QUEUE_COUNT >> 'BUILD_QUEUE_COUNT'
                         }
                     }
                     else {
