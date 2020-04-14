@@ -1,7 +1,7 @@
 pipeline {
     agent none
     environment {
-        BUILD_STATUS = 'FAILED'
+        LOCAL_BUILD_STATUS = 'FAILED'
         RUN_BISECT = 'FALSE'
     }
     stages {
@@ -14,6 +14,7 @@ pipeline {
                 script {
                     if (env.LAST_SUCCESS_HASH != 0) {
                         if (env.BUILD_QUEUE_COUNT != 8) {
+                            echo 'increment counter'
                             env.BUILD_QUEUE_COUNT++
                         }
                         else {
@@ -27,12 +28,12 @@ pipeline {
             post {
                 success {
                     script {
-                        BUILD_STATUS = 'PASSED'
+                        LOCAL_BUILD_STATUS = 'PASSED'
                     }
                 }
                 failure {
                     script {
-                        BUILD_STATUS = 'FAILED'
+                        LOCAL_BUILD_STATUS = 'FAILED'
                     }
                 }
             }
@@ -44,7 +45,7 @@ pipeline {
             }
             steps {
                 script {
-                    if (BUILD_STATUS == 'PASSED') {
+                    if (LOCAL_BUILD_STATUS == 'PASSED') {
                         env.LAST_SUCCESS_HASH = env.GIT_COMMIT
                         bat './mvnw package'
                     }
