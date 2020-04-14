@@ -74,7 +74,7 @@ pipeline {
         }
        failure {
            script {
-               if (RUN_BISECT == 'TRUE') {
+               if (env.RUN_BISECT == 'TRUE') {
                     bat "git bisect start ${env.GIT_COMMIT} ${env.LAST_SUCCESS_HASH}"
                     bat "git bisect run mvn clean test"
                     bat "git bisect reset"
