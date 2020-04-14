@@ -17,7 +17,7 @@ pipeline {
             }
         }
         stage('Build') {
-            if (env.BRANCH_NAME == 'master) {
+            if (env.BRANCH_NAME == 'master') {
                 steps {
                     bat './mvnw deploy' 
                 }
