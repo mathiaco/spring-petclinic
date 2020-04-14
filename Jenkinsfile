@@ -71,18 +71,18 @@ pipeline {
             }
             steps {
                 script {
-                    // test passed
-                    if (LOCAL_BUILD_STATUS == 'PASSED') {
-                        echo 'will build package'
-                        bat './mvnw package'
-                        // save current as good commit
-                        writeFile file: 'HASH_FILE', text: env.GIT_COMMIT
-                    }
-                    else {
-                        // if good commit is stored and test failed then indicate to git bisect
-                        if (LAST_SUCCESS_HASH.contains('NONE')) {
-                            // if we build before
-                            if (RUN_PACKAGE == 'TRUE') {
+                    // if we build before
+                    if (RUN_PACKAGE == 'TRUE') {
+                        // test passed
+                        if (LOCAL_BUILD_STATUS == 'PASSED') {
+                            echo 'will build package'
+                            bat './mvnw package'
+                            // save current as good commit
+                            writeFile file: 'HASH_FILE', text: env.GIT_COMMIT
+                        }
+                        else {
+                            // if good commit is stored and test failed then indicate to git bisect
+                            if (LAST_SUCCESS_HASH.contains('NONE')) {
                                 echo 'git bisect'
                                 RUN_BISECT = 'TRUE'
                             }
