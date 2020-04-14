@@ -17,7 +17,11 @@ pipeline {
             }
         }
         stage('deploy') {
-            if (env.BRANCH_NAME == 'master') {
+            when 
+            {
+                expression{ env.BRANCH_NAME == 'master' }
+            }
+            {
                 steps {
                     bat './mvnw deploy' 
                 }
