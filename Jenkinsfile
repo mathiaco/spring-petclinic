@@ -12,17 +12,17 @@ pipeline {
             }
             steps {
                 script {
-                    echo 'last hash ${LAST_SUCCESS_HASH}'
-                    if (LAST_SUCCESS_HASH != 0) {
-                        if (BUILD_QUEUE_COUNT != 8) {
-                            echo 'increment counter currently at ${BUILD_QUEUE_COUNT}'
-                            BUILD_QUEUE_COUNT++
+                    echo 'last hash ${env.LAST_SUCCESS_HASH}'
+                    if (env.LAST_SUCCESS_HASH != 0) {
+                        if (env.BUILD_QUEUE_COUNT != 8) {
+                            echo 'increment counter currently at ${env.BUILD_QUEUE_COUNT}'
+                            env.BUILD_QUEUE_COUNT = env.BUILD_QUEUE_COUNT + 1
                         }
                         else {
                             echo 'cleaning and testing'
                             bat './mvnw clean'
                             bat './mvnw test'
-                            BUILD_QUEUE_COUNT = 0
+                            env.BUILD_QUEUE_COUNT = 0
                         }
                     }
                 }
@@ -51,11 +51,11 @@ pipeline {
                 script {
                     if (LOCAL_BUILD_STATUS == 'PASSED') {
                         echo 'will build package'
-                        LAST_SUCCESS_HASH = env.GIT_COMMIT
+                        env.LAST_SUCCESS_HASH = env.GIT_COMMIT
                         bat './mvnw package'
                     }
                     else {
-                        if (LAST_SUCCESS_HASH != 0) {
+                        if (env.LAST_SUCCESS_HASH != 0) {
                             echo 'git bisect'
                             RUN_BISECT = 'TRUE'
                         }
@@ -71,7 +71,7 @@ pipeline {
        failure {
            script {
                if (RUN_BISECT == 'TRUE') {
-                    bat "git bisect start ${env.GIT_COMMIT} ${LAST_SUCCESS_HASH}"
+                    bat "git bisect start ${env.GIT_COMMIT} ${env.LAST_SUCCESS_HASH}"
                     bat "git bisect run mvn clean test"
                     bat "git bisect reset"
                }
