@@ -12,15 +12,17 @@ pipeline {
             }
             steps {
                 script {
-                    if (env.LAST_SUCCESS_HASH != 0) {
-                        if (env.BUILD_QUEUE_COUNT != 8) {
-                            echo 'increment counter'
-                            env.BUILD_QUEUE_COUNT++
+                    echo 'last hash ${LAST_SUCCESS_HASH}'
+                    if (LAST_SUCCESS_HASH != 0) {
+                        if (BUILD_QUEUE_COUNT != 8) {
+                            echo 'increment counter currently at ${BUILD_QUEUE_COUNT}'
+                            BUILD_QUEUE_COUNT++
                         }
                         else {
+                            echo 'cleaning and testing'
                             bat './mvnw clean'
                             bat './mvnw test'
-                            env.BUILD_QUEUE_COUNT = 0
+                            BUILD_QUEUE_COUNT = 0
                         }
                     }
                 }
@@ -28,11 +30,13 @@ pipeline {
             post {
                 success {
                     script {
+                        echo 'test passed'
                         LOCAL_BUILD_STATUS = 'PASSED'
                     }
                 }
                 failure {
                     script {
+                        echo 'test failed'
                         LOCAL_BUILD_STATUS = 'FAILED'
                     }
                 }
@@ -46,11 +50,12 @@ pipeline {
             steps {
                 script {
                     if (LOCAL_BUILD_STATUS == 'PASSED') {
-                        env.LAST_SUCCESS_HASH = env.GIT_COMMIT
+                        echo 'will build package'
+                        LAST_SUCCESS_HASH = env.GIT_COMMIT
                         bat './mvnw package'
                     }
                     else {
-                        if (env.LAST_SUCCESS_HASH != 0) {
+                        if (LAST_SUCCESS_HASH != 0) {
                             echo 'git bisect'
                             RUN_BISECT = 'TRUE'
                         }
@@ -66,7 +71,7 @@ pipeline {
        failure {
            script {
                if (RUN_BISECT == 'TRUE') {
-                    bat "git bisect start ${env.GIT_COMMIT} ${env.LAST_SUCCESS_HASH}"
+                    bat "git bisect start ${env.GIT_COMMIT} ${LAST_SUCCESS_HASH}"
                     bat "git bisect run mvn clean test"
                     bat "git bisect reset"
                }
