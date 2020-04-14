@@ -5,34 +5,26 @@ pipeline {
         RUN_BISECT = 'FALSE'
     }
     stages {
-        when {
-            expression{ env.BRANCH_NAME == 'master' }
-        }
         stage('master build and test') {
             agent any
-            stages {
+            when {
+                expression{ env.BRANCH_NAME == 'master' }
+            }
+            steps {
                 script {
                     if (env.LAST_SUCCESS_HASH != 0) {
                         if (env.BUILD_QUEUE_COUNT != 8) {
-                            counter++
+                            env.BUILD_QUEUE_COUNT++
                         }
                         else {
-                            stage('build') {
-                                steps {
-                                    bat './mvnw clean'
-                                }
-                            }
-                            stage('test') {
-                                steps {
-                                    bat './mvnw test'
-                                }
-                            }
+                            bat './mvnw clean'
+                            bat './mvnw test'
                             env.BUILD_QUEUE_COUNT = 0
                         }
                     }
                 }
             }
-            post{
+            post {
                 success {
                     script {
                         BUILD_STATUS = 'PASSED'
@@ -44,18 +36,22 @@ pipeline {
                     }
                 }
             }
-            stage('master package') {
-                steps {
-                    script {
-                        if (BUILD_STATUS == 'PASSED') {
-                            env.LAST_SUCCESS_HASH = env.GIT_COMMIT
-                            bat './mvnw package'
-                        }
-                        else {
-                            if (env.LAST_SUCCESS_HASH != 0) {
-                                echo 'git bisect'
-                                RUN_BISECT = 'TRUE'
-                            }
+        }
+        stage('master package') {
+            agent any
+            when {
+                expression{ env.BRANCH_NAME == 'master' }
+            }
+            steps {
+                script {
+                    if (BUILD_STATUS == 'PASSED') {
+                        env.LAST_SUCCESS_HASH = env.GIT_COMMIT
+                        bat './mvnw package'
+                    }
+                    else {
+                        if (env.LAST_SUCCESS_HASH != 0) {
+                            echo 'git bisect'
+                            RUN_BISECT = 'TRUE'
                         }
                     }
                 }
