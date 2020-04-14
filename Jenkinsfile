@@ -3,6 +3,8 @@ pipeline {
     environment {
         LOCAL_BUILD_STATUS = 'FAILED'
         RUN_BISECT = 'FALSE'
+        LAST_SUCCESS_HASH = readFile 'HASH_FILE.txt'
+        BUILD_QUEUE_COUNT = readFile 'BUILD_QUEUE_COUNT.txt'
     }
     stages {
         stage('master build and test') {
@@ -13,18 +15,18 @@ pipeline {
             steps {
                 script {
                     echo 'last hash '
-                    echo env.LAST_SUCCESS_HASH
-                    if (env.LAST_SUCCESS_HASH != '0') {
-                        if (env.BUILD_QUEUE_COUNT != '8') {
+                    echo LAST_SUCCESS_HASH
+                    if (LAST_SUCCESS_HASH != '0') {
+                        if (BUILD_QUEUE_COUNT != 8) {
                             echo 'increment counter currently at '
-                            echo env.BUILD_QUEUE_COUNT
-                            env.BUILD_QUEUE_COUNT = env.BUILD_QUEUE_COUNT + 1
+                            echo BUILD_QUEUE_COUNT
+                            echo BUILD_QUEUE_COUNT + 1 > 'BUILD_QUEUE_COUNT.txt'
                         }
                         else {
                             echo 'cleaning and testing'
                             bat './mvnw clean'
                             bat './mvnw test'
-                            env.BUILD_QUEUE_COUNT = 0
+                            echo 0 > 'BUILD_QUEUE_COUNT.txt'
                         }
                     }
                 }
@@ -57,7 +59,7 @@ pipeline {
                         bat './mvnw package'
                     }
                     else {
-                        if (env.LAST_SUCCESS_HASH != '0') {
+                        if (LAST_SUCCESS_HASH != '0') {
                             echo 'git bisect'
                             RUN_BISECT = 'TRUE'
                         }
