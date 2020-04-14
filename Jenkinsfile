@@ -3,8 +3,6 @@ pipeline {
     environment {
         LOCAL_BUILD_STATUS = 'FAILED'
         RUN_BISECT = 'FALSE'
-        LAST_SUCCESS_HASH = readFile 'https://github.com/mathiaco/spring-petclinic/blob/master/HASH_FILE'
-        BUILD_QUEUE_COUNT = readFile 'https://github.com/mathiaco/spring-petclinic/blob/master/BUILD_QUEUE_COUNT'
     }
     stages {
         stage('master build and test') {
@@ -14,6 +12,8 @@ pipeline {
             }
             steps {
                 script {
+                    env.LAST_SUCCESS_HASH = readFile 'https://github.com/mathiaco/spring-petclinic/blob/master/HASH_FILE'
+                    env.BUILD_QUEUE_COUNT = readFile 'https://github.com/mathiaco/spring-petclinic/blob/master/BUILD_QUEUE_COUNT'
                     echo 'last hash '
                     echo LAST_SUCCESS_HASH
                     if (LAST_SUCCESS_HASH != '0') {
