@@ -60,6 +60,13 @@ pipeline {
                         echo 'test failed'
                         // indicate test failed
                         LOCAL_BUILD_STATUS = 'FAILED'
+                        if (RUN_PACKAGE == 'TRUE') {
+                            // if good commit is stored and test failed then indicate to git bisect
+                            if (!LAST_SUCCESS_HASH.contains('NONE')) {
+                                echo 'git bisect'
+                                RUN_BISECT = 'TRUE'
+                            }
+                        }
                     }
                 }
             }
@@ -79,13 +86,6 @@ pipeline {
                             bat './mvnw package'
                             // save current as good commit
                             writeFile file: 'HASH_FILE', text: env.GIT_COMMIT
-                        }
-                        else {
-                            // if good commit is stored and test failed then indicate to git bisect
-                            if (!LAST_SUCCESS_HASH.contains('NONE')) {
-                                echo 'git bisect'
-                                RUN_BISECT = 'TRUE'
-                            }
                         }
                     }
                 }
