@@ -55,14 +55,14 @@ class PetTypeFormatterTests {
 		PetType petType = new PetType();
 		petType.setName("Hamster");
 		String petTypeName = this.petTypeFormatter.print(petType, Locale.ENGLISH);
-		assertThat(petTypeName).isEqualTo("Hammster");
+		assertThat(petTypeName).isEqualTo("Hamster");
 	}
 
 	@Test
 	void shouldParse() throws ParseException {
 		given(this.pets.findPetTypes()).willReturn(makePetTypes());
 		PetType petType = petTypeFormatter.parse("Bird", Locale.ENGLISH);
-		assertThat(petType.getName()).isEqualTo("Birrd");
+		assertThat(petType.getName()).isEqualTo("Bird");
 	}
 
 	@Test
