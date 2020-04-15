@@ -2,8 +2,6 @@ pipeline {
     agent none
     environment {
         LOCAL_BUILD_STATUS = 'FAILED'
-        // var to indicate if bisect is needed
-        RUN_BISECT = 'FALSE'
         RUN_PACKAGE = 'FALSE'
     }
     stages {
@@ -64,7 +62,6 @@ pipeline {
                             // if good commit is stored and test failed then indicate to git bisect
                             if (!LAST_SUCCESS_HASH.contains('NONE')) {
                                 echo 'git bisect'
-                                RUN_BISECT = 'TRUE'
                                 bat "git bisect start ${env.GIT_COMMIT} ${env.LAST_SUCCESS_HASH}"
                                 bat "git bisect run mvn clean test"
                                 bat "git bisect reset"
