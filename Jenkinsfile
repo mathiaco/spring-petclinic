@@ -24,7 +24,7 @@ pipeline {
                         echo 'cleaning and testing'
                         bat './mvnw clean'
                         bat './mvnw test'
-                        RUN_PACKAGE = true // indicate to run package if test passes
+                        RUN_PACKAGE = 'TRUE' // indicate to run package if test passes
                         // current build count stays 0
                         writeFile file: 'BUILD_QUEUE_COUNT', text: '0'
                     }
@@ -40,7 +40,7 @@ pipeline {
                             echo 'cleaning and testing'
                             bat './mvnw clean'
                             bat './mvnw test'
-                            RUN_PACKAGE = true // indicate to run package if test passes
+                            RUN_PACKAGE = 'TRUE' // indicate to run package if test passes
                             // current build reset 0
                             writeFile file: 'BUILD_QUEUE_COUNT', text: '0'
                         }
