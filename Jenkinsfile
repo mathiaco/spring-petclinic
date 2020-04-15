@@ -65,6 +65,9 @@ pipeline {
                             if (!LAST_SUCCESS_HASH.contains('NONE')) {
                                 echo 'git bisect'
                                 RUN_BISECT = 'TRUE'
+                                bat "git bisect start ${env.GIT_COMMIT} ${env.LAST_SUCCESS_HASH}"
+                                bat "git bisect run mvn clean test"
+                                bat "git bisect reset"
                             }
                         }
                     }
@@ -97,13 +100,6 @@ pipeline {
            slackSend message: "Build Succeeded - ${env.JOB_NAME} ${env.BUILD_NUMBER} (<${env.BUILD_URL}|Open>)"
         }
        failure {
-           script {
-               if (env.RUN_BISECT == 'TRUE') {
-                    bat "git bisect start ${env.GIT_COMMIT} ${env.LAST_SUCCESS_HASH}"
-                    bat "git bisect run mvn clean test"
-                    bat "git bisect reset"
-               }
-           }
            slackSend message: "Build Failed - ${env.JOB_NAME} ${env.BUILD_NUMBER} (<${env.BUILD_URL}|Open>)"
        }
        always {
