@@ -82,7 +82,7 @@ pipeline {
                         }
                         else {
                             // if good commit is stored and test failed then indicate to git bisect
-                            if (LAST_SUCCESS_HASH.contains('NONE')) {
+                            if (!LAST_SUCCESS_HASH.contains('NONE')) {
                                 echo 'git bisect'
                                 RUN_BISECT = 'TRUE'
                             }
